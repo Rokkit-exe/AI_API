@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from sentiment import Sentiment
-from summarizer import Summarizer
+from AI_API.summarization import Summarizer
 
 port = 5000
 
@@ -36,7 +36,7 @@ def handle_sentiment_post():
     
 
 # summarizer route
-@app.route('/summarizer', methods=['POST'])
+@app.route('/summarization', methods=['POST'])
 def handle_summarize_post():
     try:
         data = request.get_json()
@@ -44,7 +44,23 @@ def handle_summarize_post():
         summarizer = Summarizer()
         output = jsonify({
             "Success": 200,
-            "request": "POST /summarizer",
+            "request": "POST /summarization",
+            "model": data['model'],
+            "data": summarizer.get_summarize(data["text"])
+        })
+        return output
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    
+@app.route('/fill_mask', methods=['POST'])
+def handle_fill_mask_post():
+    try:
+        data = request.get_json()
+        print(data['text'])
+        summarizer = Summarizer()
+        output = jsonify({
+            "Success": 200,
+            "request": "POST /fill_mask",
             "model": data['model'],
             "data": summarizer.get_summarize(data["text"])
         })

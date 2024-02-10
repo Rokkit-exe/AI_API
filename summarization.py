@@ -1,4 +1,4 @@
-from transformers import pipeline 
+from transformers import pipeline
 
 class Summarizer:
     def __init__(self, model_name="t5-small", tokenizer='t5-small', model_path="./models", framework='pt'):
