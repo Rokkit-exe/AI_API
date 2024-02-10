@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from sentiment import Sentiment
-from AI_API.summarization import Summarizer
+from summarizer import Summarizer
 
 port = 5000
 

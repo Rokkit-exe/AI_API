@@ -43,18 +43,47 @@ def create_model_dir(model_path=MODEL_BASE_PATH):
 
 # set device
 def set_device():
-    return "cuda" if torch.cuda.is_available() else "cpu"
+    print("device info: ", json.dumps(get_device_info(), indent=4))
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+    print(f"Device: {device}")
+    if device == "cuda":
+        print(f"Setting default device to {device}")
+        torch.set_default_device(device)
+    return device
+
+# get device info
+def get_device_info():
+    return {
+        "cuda_version": torch.version.cuda,
+        "torch_version": torch.__version__,
+        "device_available": torch.cuda.is_available()
+    }
 
 def get_model_task(model_name):
     api = HfApi()
     model_info = api.model_info("distilbert-base-uncased")
-
+    print(model_info)
     # The url to the model card (README file)
-    print(model_info["id"])
-    print(model_info["author"])
+    #print(model_info["id"])
+    #print(model_info["author"])
     #print(model_info["sha"])
     #print(model_info["library_name"])
     #print(model_info["tags"])
     #print(model_info["pipeline_tag"])
     #print(model_info["mask_token"])
     #print(json.dumps(model_info[0], indent=2))
+
+def is_pipeline_supported(pipeline):
+    with open("pipelines.json", "r") as f:
+        PIPELINES = json.load(f)
+    for p in PIPELINES:
+        if p["task"] == pipeline:
+            return True
+    return False
+
+def get_models_from_pipeline(pipeline):
+    with open("pipelines.json", "r") as f:
+        PIPELINES = json.load(f)
+    for p in PIPELINES:
+        if p["task"] == pipeline:
+            return p["models"]

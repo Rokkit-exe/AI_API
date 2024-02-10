@@ -1,0 +1,172 @@
+[
+    {
+        "task": "audio-classification",
+        "models": [
+            "wav2vec2",
+            "HuBERT-base"
+        ]
+    },
+    {
+        "task": "automatic-speech-recognition",
+        "models": [
+            "wav2vec2",
+            "Speech2Text"
+        ]
+    },
+    {
+        "task": "conversational",
+        "models": [
+            "DialoGPT",
+            "BlenderBot"
+        ]
+    },
+    {
+        "task": "depth-estimation",
+        "models": [
+            "deit",
+            "MiDaS"
+        ]
+    },
+    {
+        "task": "document-question-answering",
+        "models": [
+            "deberta",
+            "BERT",
+            "DistilBERT",
+            "ELECTRA"
+        ]
+    },
+    {
+        "task": "feature-extraction",
+        "models": [
+            "BERT",
+            "GPT-2",
+            "RoBERTa"
+        ]
+    },
+    {
+        "task": "fill-mask",
+        "models": [
+            "BERT",
+            "DistilBERT",
+            "ELECTRA",
+            "RoBERTa"
+        ]
+    },
+    {
+        "task": "image-classification",
+        "models": [
+            "ViT",
+            "ResNet",
+            "DenseNet",
+            "MobileNet",
+            "EfficientNet",
+            "Inception",
+            "VGG",
+            "AlexNet",
+            "LeNet",
+            "CLIP"
+        ]
+    },
+    {
+        "task": "image-segmentation",
+        "models": [
+            "DETR"
+        ]
+    },
+    {
+        "task": "image-to-image",
+        "models": [
+            "pix2pix",
+            "CycleGAN",
+            "UNIT",
+            "MUNIT",
+            "DRIT",
+            "StarGAN",
+            "StyleGAN",
+            "StyleGAN2",
+            "BigGAN",
+            "ProGAN",
+            "ESRGAN"
+        ]
+    },
+    {
+        "task": "image-to-text",
+        "models": [
+            "CLIP",
+            "ViT",
+            "DALL-E"
+        ]
+    },
+    {
+        "task": "mask-generation",
+        "models": [
+            "BERT",
+            "DistilBERT",
+            "ELECTRA",
+            "RoBERTa"
+        ]
+    },
+    {
+        "task": "object-detection",
+        "models": [
+            "DETR",
+            "YOLO",
+            "SSD",
+            "Faster R-CNN",
+            "RetinaNet",
+            "Mask R-CNN",
+            "EfficientDet"
+        ]
+    },
+    {
+        "task": "question-answering",
+        "models": [
+            "BERT",
+            "DistilBERT",
+            "ELECTRA"
+        ]
+    },
+    {
+        "task": "summarization",
+        "models": [
+            "BART",
+            "T5",
+            "Pegasus"
+        ]
+    },
+    {
+        "task": "table-question-answering",
+        "models": [
+            "TAPAS"
+        ]
+    },
+    {
+        "task": "text2text-generation",
+        "models": [
+            "GPT-2",
+            "GPT-3",
+            "T5",
+            "Pegasus",
+            "BART"
+        ]
+    },
+    {
+        "task": "text-classification",
+        "models": [
+            "BERT",
+            "DistilBERT",
+            "ELECTRA",
+            "RoBERTa"
+        ]
+    },
+    {
+        "task": "sentiment-analysis",
+        "models": [
+            "BERT",
+            "DistilBERT",
+            "ELECTRA",
+            "RoBERTa"
+        ]
+    }
+]
