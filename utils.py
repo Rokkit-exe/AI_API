@@ -1,22 +1,38 @@
 import os
 from transformers import AutoTokenizer, AutoModelForCausalLM
-from huggingface_hub import hf_hub_download, HfApi
+from huggingface_hub import hf_hub_download, HfApi, snapshot_download
 import torch
 import json
+import subprocess
 
 # load environment variables
-# from dotenv import load_dotenv
-# load_dotenv()
-# MODEL_BASE_PATH = os.getenv("MODEL_BASE_PATH")
+from dotenv import load_dotenv
+load_dotenv()
 
 MODEL_BASE_PATH = "./models"
 
+# huggingface hub login with hu
+def hf_hub_login(token):
+    try:
+        subprocess.run(["huggingface-cli", "login", "--token", token])
+        print("Logged in to huggingface hub")
+    except Exception as e:
+        print(f"Unable to login to huggingface hub\n\n{e}")
+
 # install model from huggingface hub in local directory
 def install_model(model_name, model_path=MODEL_BASE_PATH):
+    # login to huggingface hub
+    hf_hub_login(os.getenv("HUGGINGFACE_TOKEN"))
+
+    # create model directory
+    create_model_dir(model_name=model_name)
+
+    local_dir = os.path.join(model_path, model_name)
+
+    # download model from huggingface hub
     if not is_model_installed(model_path):
-        create_model_dir(model_path)
         try:
-            hf_hub_download(repo_id=model_name, repo_type=MODEL_BASE_PATH, path=model_path)
+            snapshot_download(repo_id=model_name, local_dir=local_dir, revision="main")
             print(f"Model {model_name} installed in {model_path}")
         except Exception as e:
             print(f"Unable to install model {model_name} in {model_path}\n\n{e}")        
@@ -30,11 +46,12 @@ def load_model(model_path=MODEL_BASE_PATH):
     return model, tokenizer
 
 # check if model is installed
-def is_model_installed(model_path=MODEL_BASE_PATH, model_name="gpt2"):
+def is_model_installed(model_name="gpt2", model_path=MODEL_BASE_PATH):
     return os.path.exists(os.path.join(model_path, model_name))
     
 # create model directory
-def create_model_dir(model_path=MODEL_BASE_PATH):
+def create_model_dir(model_name, model_path=MODEL_BASE_PATH):
+    model_path = os.path.join(model_path, model_name)
     if not os.path.exists(model_path):
         os.makedirs(model_path)
         print(f"Directory {model_path} created")

@@ -1,5 +1,5 @@
-from utils import get_model_task, set_device, install_model, load_model, is_model_installed, create_model_dir, MODEL_BASE_PATH, is_pipeline_supported, get_models_from_pipeline
-
+#from utils import get_model_task, set_device, install_model, load_model, is_model_installed, create_model_dir, MODEL_BASE_PATH, is_pipeline_supported, get_models_from_pipeline
+import torch
 # get model task
 #model_task = get_model_task("distilbert-base-uncased")
 
@@ -7,7 +7,9 @@ from utils import get_model_task, set_device, install_model, load_model, is_mode
 #device = set_device()
 #print(device)
 
-print(is_pipeline_supported("summarization"))
+#print(is_pipeline_supported("summarization"))
 
-print(get_models_from_pipeline("summarization"))
+#print(get_models_from_pipeline("summarization"))
+
+print(torch.__version__)
 
