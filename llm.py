@@ -1,7 +1,8 @@
-from transformers import AutoModelForCausalLM, AutoTokenizer, MistralConfig, MistralModel
+from transformers import AutoModelForCausalLM, AutoTokenizer, MistralConfig, MistralModel, MistralForCausalLM
 import torch
 from utils import install_model, MODEL_BASE_PATH
 import os
+import warnings
 
 model1 = "cognitivecomputations/dolphin-2.6-mistral-7b"
 model2 = "cognitivecomputations/TinyDolphin-2.8-1.1b"
@@ -26,7 +27,7 @@ def generate():
     print(f"Loading model from {model_path} to {device}")
     print("Loading model...")
 
-    model = AutoModelForCausalLM.from_pretrained(model_path, torch_dtype=torch.float16, attn_implementation="flash_attention_2").to(device)
+    model = MistralForCausalLM.from_pretrained(model_path, torch_dtype=torch.float16, attn_implementation="flash_attention_2").to(device)
     print("Loading tokenizer...")
     tokenizer = AutoTokenizer.from_pretrained(model_path)
 

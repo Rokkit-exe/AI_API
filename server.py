@@ -1,6 +1,10 @@
 from flask import Flask, request, jsonify
+from utils import install_model, MODEL_BASE_PATH
 from sentiment import Sentiment
 from summarizer import Summarizer
+from mistral import Mistral
+from fill_mask import Fill_Mask
+from llama import Llama
 
 port = 5000
 
@@ -46,7 +50,7 @@ def handle_summarize_post():
             "Success": 200,
             "request": "POST /summarization",
             "model": data['model'],
-            "data": summarizer.get_summarize(data["text"])
+            "data": summarizer.summarize(data["text"])
         })
         return output
     except Exception as e:
@@ -57,12 +61,40 @@ def handle_fill_mask_post():
     try:
         data = request.get_json()
         print(data['text'])
-        summarizer = Summarizer()
+        fill_mask = Fill_Mask()
         output = jsonify({
             "Success": 200,
             "request": "POST /fill_mask",
             "model": data['model'],
-            "data": summarizer.get_summarize(data["text"])
+            "data": fill_mask.fill_mask(data["text"])
+        })
+        return output
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    
+@app.route('/text_generation/mistral', methods=['POST'])
+def handle_text_generation_mistral_post():
+    try:
+        data = request.get_json()
+        print(data['text'])
+        output = jsonify({
+            "Success": 200,
+            "request": "POST /text_generation",
+            "data": mistral_model.generate(data["text"])
+        })
+        return output
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/text_generation/llama', methods=['POST'])
+def handle_text_generation_llama_post():
+    try:
+        data = request.get_json()
+        print(data['text'])
+        output = jsonify({
+            "Success": 200,
+            "request": "POST /text_generation",
+            "data": llama_model.generate(data["text"])
         })
         return output
     except Exception as e:
@@ -70,4 +102,8 @@ def handle_fill_mask_post():
 
 
 if __name__ == '__main__':
+    mistral_model = Mistral(model_name="cognitivecomputations/dolphin-2.6-mistral-7b")
+    llama_model = Llama(model_name="codellama/CodeLlama-7b-hf")
+    llama_model.load_model()
+    #mistral_model.load_model()
     app.run(debug=True, port=5000)

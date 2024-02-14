@@ -1,4 +1,4 @@
-#from utils import get_model_task, set_device, install_model, load_model, is_model_installed, create_model_dir, MODEL_BASE_PATH, is_pipeline_supported, get_models_from_pipeline
+from utils import get_model_info
 import torch
 # get model task
 #model_task = get_model_task("distilbert-base-uncased")
@@ -11,5 +11,7 @@ import torch
 
 #print(get_models_from_pipeline("summarization"))
 
-print(torch.__version__)
+if __name__ == "__main__":
+    model_info = get_model_info("cognitivecomputations/dolphin-2.6-mistral-7b")
+    print(model_info)
 
