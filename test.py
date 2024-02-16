@@ -1,17 +1,38 @@
-from utils import get_model_info
+from unsloth import FastLanguageModel
+from unsloth.chat_templates import get_chat_template
 import torch
-# get model task
-#model_task = get_model_task("distilbert-base-uncased")
+from trl import SFTTrainer
+from transformers import TrainingArguments
+from datasets import load_dataset
 
-# set device
-#device = set_device()
-#print(device)
+max_seq_length = 2048
 
-#print(is_pipeline_supported("summarization"))
+model, tokenizer = FastLanguageModel.from_pretrained(
+    model_name = "models/mistra_test_save", # Supports Llama, Mistral - replace this!
+    max_seq_length = max_seq_length,
+    dtype = None,
+    load_in_4bit = True,
+)
 
-#print(get_models_from_pipeline("summarization"))
+tokenizer = get_chat_template(
+    tokenizer,
+    chat_template = "mistral", # Supports zephyr, chatml, mistral, llama, alpaca, vicuna, vicuna_old, unsloth
+    mapping = {"role" : "from", "content" : "value", "user" : "human", "assistant" : "gpt"}, # ShareGPT style
+    map_eos_token = True, # Maps <|im_end|> to </s> instead
+)
 
-if __name__ == "__main__":
-    model_info = get_model_info("cognitivecomputations/dolphin-2.6-mistral-7b")
-    print(model_info)
+FastLanguageModel.for_inference(model) # Enable native 2x faster inference
+
+messages = [
+    {"from": "human", "value": "how to declare a function in python?"},
+]
+inputs = tokenizer.apply_chat_template(
+    messages,
+    tokenize = True,
+    add_generation_prompt = True, # Must add for generation
+    return_tensors = "pt",
+).to("cuda")
+
+outputs = model.generate(input_ids = inputs, max_new_tokens = 64, use_cache = True)
+print(tokenizer.batch_decode(outputs))
 
