@@ -1,10 +1,10 @@
 from flask import Flask, request, jsonify
 from utils import install_model, MODEL_BASE_PATH
-from sentiment import Sentiment
-from summarizer import Summarizer
-from mistral import Mistral
-from fill_mask import Fill_Mask
-from llama import Llama
+from pipelines.sentiment import Sentiment
+from pipelines.summarizer import Summarizer
+from classes.mistral import Mistral
+from pipelines.fill_mask import Fill_Mask
+from classes.llama import Llama
 
 port = 5000
 
@@ -90,7 +90,6 @@ def handle_text_generation_mistral_post():
 def handle_text_generation_llama_post():
     try:
         data = request.get_json()
-        print(data['text'])
         output = jsonify({
             "Success": 200,
             "request": "POST /text_generation",

@@ -1,0 +1,46 @@
+FROM ubuntu:22.04
+
+EXPOSE 5000
+
+RUN apt update
+RUN apt install -y git
+RUN apt install -y wget
+RUN apt install -y dpkg
+
+# create working directory
+WORKDIR /app
+
+RUN cd /app
+
+# clone the repository
+RUN git clone https://github.com/Rokkit-exe/AI_API.git
+
+RUN ls -la
+
+RUN cd /app/AI_API
+
+# change permissions to execute the script
+#RUN chmod +x ./requirements.sh
+
+RUN wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-ubuntu2204.pin
+RUN mv cuda-ubuntu2204.pin /etc/apt/preferences.d/cuda-repository-pin-600
+RUN wget https://developer.download.nvidia.com/compute/cuda/11.8.0/local_installers/cuda-repo-ubuntu2204-11-8-local_11.8.0-520.61.05-1_amd64.deb
+RUN dpkg -i cuda-repo-ubuntu2204-11-8-local_11.8.0-520.61.05-1_amd64.deb
+RUN cp /var/cuda-repo-ubuntu2204-11-8-local/cuda-*-keyring.gpg /usr/share/keyrings/
+RUN apt-get -y update
+RUN apt-get -y install cuda
+RUN apt-get -y install python3.11
+RUN apt-get -y install python3-pip
+RUN apt-get -y install python3-venv
+#RUN apt-get -y install nvidia-cuda-toolkit
+
+# install requirements
+RUN pip3 install transformers 
+RUN pip3 install flask 
+RUN pip3 install huggingface_hub 
+RUN pip3 install python-dotenv 
+RUN pip3 install torch --index-url https://download.pytorch.org/whl/cu118
+RUN pip3 install flash-attn
+
+# run server
+#RUN python3 /app/AI_API/server.py

@@ -1,6 +1,10 @@
 transformers
-flask
-torch --index-url https://download.pytorch.org/whl/cu118
-huggingface_hub
-python-dotenv
 flash-attn
+accelerate
+bitsandbytes
+huggingface_hub
+openai
+flask
+asyncio
+gradio
+python-dotenv
