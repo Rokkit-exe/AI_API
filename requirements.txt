@@ -9,6 +9,10 @@ asyncio
 gradio
 python-dotenv
 
+# stable diffusion dependencies
 diffusers 
 scipy 
 safetensors
+
+# mistral api dependencies
+mistralai

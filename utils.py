@@ -30,6 +30,9 @@ def install_model(model_name, model_path=MODEL_BASE_PATH):
     # create model directory
     create_model_dir(model_name=model_name)
 
+    model_name = model_name.split("/")
+    model_name = model_name[1]
+
     local_dir = os.path.join(model_path, model_name)
 
     # download model from huggingface hub
@@ -103,3 +106,8 @@ def get_models_from_pipeline(pipeline):
     for p in PIPELINES:
         if p["task"] == pipeline:
             return p["models"]
+        
+def get_available_models():
+    with open("models.json", "r") as f:
+        models = json.load(f)
+    return models
