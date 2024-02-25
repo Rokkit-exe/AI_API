@@ -50,6 +50,13 @@ pip3 install packaging
 pip3 install ninja
 pip3 install flash-attn --no-build-isolation
 
+# xformers install (stable diffusion)
+pip3 install -U xformers --index-url https://download.pytorch.org/whl/cu118
+
+# t5 (text to speech)
+pip install --upgrade sentencepiece datasets[audio]
+
+
 
 pip3 install -r requirements.txt
 

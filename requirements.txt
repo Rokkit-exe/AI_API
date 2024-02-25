@@ -8,3 +8,7 @@ flask
 asyncio
 gradio
 python-dotenv
+
+diffusers 
+scipy 
+safetensors
