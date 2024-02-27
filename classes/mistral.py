@@ -5,14 +5,15 @@ import os
 
 class Mistral:
     def __init__(self, model_name="cognitivecomputations/dolphin-2.6-mistral-7b"):
-
+        self.model_name = model_name
         self.model_path = self.build_model_path(model_name)
 
-        if not is_model_installed(self.model_path):
-            install_model(model_name=self.model_path)
+        if not is_model_installed(self.model_name):
+            install_model(model_name=self.model_name)
         self.config = MistralConfig.from_pretrained(self.model_path)
         self.tokenizer = None
         self.model = None
+        self.model_loaded = False
         #self.model_info = get_model_info(self.model_path)
         if not torch.cuda.is_available():
             # raise error
@@ -36,10 +37,12 @@ class Mistral:
     def load_model(self):
         print(f"Loading model from {self.model_path} to {self.device}")
         print("Loading model...")
-
         self.model = MistralForCausalLM.from_pretrained(self.model_path, torch_dtype=torch.float16, attn_implementation="flash_attention_2").to(self.device)
         print("Loading tokenizer...")
         self.tokenizer = AutoTokenizer.from_pretrained(self.model_path)
+        print("model loaded successfully")
+        self.model_loaded = True
+
 
     def build_model_path(self, model_name):
         return os.path.join(MODEL_BASE_PATH, model_name)

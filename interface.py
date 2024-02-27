@@ -4,16 +4,12 @@ from api.mistral_api_requests import chat, stream_chat
 from api.openai_api_requests import chat_completion
 from utils import install_model, get_available_models
 from stable_diffusion import SD_Pipeline
+from classes.mistral import Mistral
+
 user_image = "images/person-5.webp"
 mistral_image = "images/mistral-ai-icon-logo.webp"
 openai_image = "images/OpenAI_Logo.webp"
 
-def wait(text):
-    loading = True
-    while loading:
-        time.sleep(5)
-        loading = False
-    return "done"
 
 with gr.Blocks() as demo:
     with gr.Tab("Mistral API") as mistral_tab:
@@ -120,55 +116,28 @@ with gr.Blocks() as demo:
     with gr.Tab("Local LLM"):
         with gr.Row() as row:
             with gr.Column(scale=4) as col1:
-                chatbot = gr.Chatbot(
-                    label="local-llm", 
-                    show_label=True,
-                    avatar_images=[user_image, mistral_image],
-                )
-                msg = gr.Textbox(
-                    placeholder="Type your message here...", 
-                    label="User Message", 
-                    show_label=True, 
-                )
-                clear = gr.ClearButton([msg, chatbot], size="sm") 
+                llm = Mistral()
+                load_model_button = gr.Button(value="Load Model", size="sm")
+                load_model_button.click(llm.load_model, show_progress="minimal")
+        gr.Progress(llm.model_loaded)
+        chatbot = gr.Chatbot(
+            label="local-llm", 
+            show_label=True,
+            avatar_images=[user_image, mistral_image],
+        )
+        msg = gr.Textbox(
+            placeholder="Type your message here...", 
+            label="User Message", 
+            show_label=True, 
+        )
+        clear = gr.ClearButton([msg, chatbot], size="sm") 
 
-                def respond(message, chat_history):
-                    bot_message = chat(message)
-                    chat_history.append((message, bot_message))
-                    return "", chat_history
-                
-                msg.submit(respond, [msg, chatbot], [msg, chatbot])
-            with gr.Column(scale=1) as col2:
-                available_models = ["gpt2", "gpt2-medium", "gpt2-large", "gpt2-xl"]
-                model_dropdown = gr.Dropdown(
-                    choices=available_models, 
-                    label="Model", 
-                    show_label=True, 
-                )
-                temperature_slider = gr.Slider(
-                    minimum=0.1, 
-                    maximum=1.0,
-                    value=0.7,
-                    label="Temperature", 
-                    show_label=True,
-                    interactive=True,
-                )
-                max_tokens_slider = gr.Slider(
-                    minimum=10, 
-                    maximum=500,
-                    value=250,
-                    label="Max Tokens", 
-                    show_label=True,
-                    interactive=True,
-                )
-                device_dropdown = gr.Dropdown(
-                    choices=["cpu", "cuda"], 
-                    label="Device", 
-                    show_label=True, 
-                )
-                submit = gr.Button(value="Submit", size="sm")
-                submit.click(wait, submit, show_progress="minimal")
-
+        def respond(message, chat_history):
+            bot_message = chat(message)
+            chat_history.append((message, bot_message))
+            return "", chat_history
+        
+        msg.submit(respond, [msg, chatbot], [msg, chatbot])                
 # install models TAB
     with gr.Tab("Install models"):
         with gr.Row() as row:

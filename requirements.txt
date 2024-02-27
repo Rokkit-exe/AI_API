@@ -16,3 +16,6 @@ safetensors
 
 # mistral api dependencies
 mistralai
+
+# GUI
+pyqt5

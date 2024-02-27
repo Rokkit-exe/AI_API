@@ -24,7 +24,6 @@ class Llama:
             pad_token_id=self.tokenizer.eos_token_id, 
             eos_token_id=self.tokenizer.eos_token_id
         )
-        print(generated_ids[0])
         return self.tokenizer.batch_decode(generated_ids)[0]
     
     def load_model(self):

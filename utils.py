@@ -30,26 +30,18 @@ def install_model(model_name, model_path=MODEL_BASE_PATH):
     # create model directory
     create_model_dir(model_name=model_name)
 
-    model_name = model_name.split("/")
-    model_name = model_name[1]
-
     local_dir = os.path.join(model_path, model_name)
 
     # download model from huggingface hub
     try:
         snapshot_download(repo_id=model_name, local_dir=local_dir, revision="main")
+        update_model_info(action="add", category="installed", model_name=model_name)
         print(f"Model {model_name} installed in {model_path}")
     except Exception as e:
         print(f"Unable to install model {model_name} in {model_path}\n\n{e}")        
 
-# load model from local directory
-def load_model(model_path=MODEL_BASE_PATH):
-    tokenizer = AutoTokenizer.from_pretrained(model_path)
-    model = AutoModelForCausalLM.from_pretrained(model_path)
-    return model, tokenizer
-
 # check if model is installed
-def is_model_installed(model_name="gpt2", model_path=MODEL_BASE_PATH):
+def is_model_installed(model_name, model_path=MODEL_BASE_PATH):
     return os.path.exists(os.path.join(model_path, model_name))
     
 # create model directory
@@ -92,22 +84,43 @@ def get_model_info(model_name="distilbert-base-uncased"):
     }
     return json.dumps(model_info, indent=4)
 
-def is_pipeline_supported(pipeline):
-    with open("pipelines.json", "r") as f:
-        PIPELINES = json.load(f)
-    for p in PIPELINES:
-        if p["task"] == pipeline:
-            return True
-    return False
-
-def get_models_from_pipeline(pipeline):
-    with open("pipelines.json", "r") as f:
-        PIPELINES = json.load(f)
-    for p in PIPELINES:
-        if p["task"] == pipeline:
-            return p["models"]
-        
-def get_available_models():
-    with open("models.json", "r") as f:
+def get_installed_models(file_path="models.json"):
+    with open(file_path, "r") as f:
         models = json.load(f)
-    return models
+    return models["installed_models"]
+
+def get_available_models(file_path="models.json"):
+    with open(file_path, "r") as f:
+        models = json.load(f)
+    return models["available_models"]
+
+def uninstall_model(model_name, model_path=MODEL_BASE_PATH):
+    local_dir = os.path.join(model_path, model_name)
+    try:
+        os.rmdir(local_dir)
+        print(f"Model {model_name} uninstalled")
+        update_model_info(action="remove", category="installed", model_name=model_name)
+    except Exception as e:
+        print(f"Unable to uninstall model {model_name}\n\n{e}")
+
+def update_model_info(action=["add", "remove"], category=["installed", "available"], model_name=""):
+    installed_models = get_installed_models()
+    available_models = get_available_models()
+    if action == "add":
+        if category == "installed":
+            installed_models.append(model_name)
+        elif category == "available":
+            available_models.append(model_name)
+    elif action == "remove":
+        if category == "installed":
+            installed_models.remove(model_name)
+        elif category == "available":
+            available_models.remove(model_name)
+
+    models = {
+        "installed_models": installed_models,
+        "available_models": available_models
+    }
+    with open("models.json", "w") as f:
+        json.dump(models, f)
+        print("models.json updated")

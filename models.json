@@ -1,64 +1,16 @@
 {
-    "text-generation": [
-        {
-            "author": "cognitivecomputations",
-            "name": "dolphin-2.6-mistral-7b",
-            "License": "apache-2.0",
-            "type": "text-generation",
-            "size": "7b",
-            "link": "https://huggingface.co/cognitivecomputations/dolphin-2.6-mistral-7b"
-        },
-        {
-            "author": "codellama",
-            "name": "CodeLlama-7b-hf",
-            "License": "llama2",
-            "type": "text-generation",
-            "size": "7b",
-            "link": "https://huggingface.co/codellama/CodeLlama-7b-hf"
-        },
-        {
-            "author": "google",
-            "name": "gemma-7b",
-            "License": "gemma-terms-of-use",
-            "type": "text-generation",
-            "size": "7b",
-            "link": "https://huggingface.co/google/gemma-7b"
-        },
-        {
-            "author": "cognitivecomputations",
-            "name": "dolphin-2_6-phi-2",
-            "License": "mit",
-            "type": "text-generation",
-            "size": "3b",
-            "link": "https://huggingface.co/cognitivecomputations/dolphin-2_6-phi-2"
-        },
-        {
-            "author": "cognitivecomputations",
-            "name": "TinyDolphin-2.8-1.1b",
-            "License": "apache-2.0",
-            "type": "text-generation",
-            "size": "1b",
-            "link": "https://huggingface.co/cognitivecomputations/TinyDolphin-2.8-1.1b"
-        }
+    "available_models": [
+        "cognitivecomputations/dolphin-2.6-mistral-7b",
+        "stabilityai/stable-diffusion-2-1",
+        "codellama/CodeLlama-7b-hf",
+        "google/gemma-7b",
+        "cognitivecomputations/dolphin-2_6-phi-2"
     ],
-    "text-to-image": [
-        {
-            "author": "stabilityai",
-            "name": "stable-diffusion-2-1",
-            "License": "openrail++",
-            "type": "text-to-image",
-            "size": "1b",
-            "link": "https://huggingface.co/stabilityai/stable-diffusion-2-1"
-        }
-    ],
-    "text-to-speech": [
-        {
-            "author": "facebook",
-            "name": "facebook/wav2vec2-base-960h",
-            "License": "mit",
-            "type": "text-to-speech",
-            "size": "960h",
-            "link": "https://huggingface.co/facebook/wav2vec2-base-960h"
-        }
+    "installed_models": [
+        "cognitivecomputations/dolphin-2.6-mistral-7b",
+        "stabilityai/stable-diffusion-2-1"
     ]
 }
+
+
+
