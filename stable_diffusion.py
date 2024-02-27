@@ -2,15 +2,25 @@ import torch
 from diffusers import StableDiffusionPipeline, DPMSolverMultistepScheduler
 from utils import install_model
 
-model_id = "models/stabilityai/stable-diffusion-2-1"
+
 
 # Use the DPMSolverMultistepScheduler (DPM-Solver++) scheduler here instead
-pipe = StableDiffusionPipeline.from_pretrained(model_id, torch_dtype=torch.float16)
-pipe.scheduler = DPMSolverMultistepScheduler.from_config(pipe.scheduler.config)
-pipe = pipe.to("cuda")
-pipe.enable_attention_slicing()
 
-prompt = "A logo representing an otter's face."
-image = pipe(prompt).images[0]
-    
-image.save("generated_images/image.png")
+class SD_Pipeline:
+    def __init__(self):
+        self.model_id = "models/stabilityai/stable-diffusion-2-1"
+        self.pipeline = None
+        self.image = None
+
+    def load_model(self):
+        self.pipeline = StableDiffusionPipeline.from_pretrained(self.model_id, torch_dtype=torch.float16)
+        self.pipeline.scheduler = DPMSolverMultistepScheduler.from_config(self.pipeline.scheduler.config)
+        self.pipeline = self.pipeline.to("cuda")
+        self.pipeline.enable_attention_slicing()
+
+    def generate_image(self, prompt):
+        self.image = self.pipeline(prompt).images[0]
+        return self.image
+
+    def save_image(self):
+        self.image.save("generated_images/image.png")

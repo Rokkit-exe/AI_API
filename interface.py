@@ -3,6 +3,7 @@ import time
 from api.mistral_api_requests import chat, stream_chat
 from api.openai_api_requests import chat_completion
 from utils import install_model, get_available_models
+from stable_diffusion import SD_Pipeline
 user_image = "images/person-5.webp"
 mistral_image = "images/mistral-ai-icon-logo.webp"
 openai_image = "images/OpenAI_Logo.webp"
@@ -99,6 +100,23 @@ with gr.Blocks() as demo:
                     interactive=True,
                 )
                 msg.submit(respond, [model_dropdown, role_textbox, msg, chatbot], [msg, chatbot])
+# local stable diffision TAB
+    with gr.Tab("Local Stable Diffision"):
+        with gr.Row() as row:
+            with gr.Column(scale=1) as col1:
+                pipeline = SD_Pipeline()
+                load_model_button = gr.Button(value="Load Model", size="sm")
+                load_model_button.click(pipeline.load_model, show_progress="minimal")
+                text_to_image_interface = gr.Interface(
+                    fn=pipeline.generate_image,
+                    inputs=gr.Textbox(placeholder="Type your prompt here...", label="Prompt", show_label=True),
+                    outputs=gr.Image(label="Generated Image"),
+                )
+                save_image_button = gr.Button(value="Save Image", size="sm")
+                save_image_button.click(pipeline.save_image, show_progress="minimal")
+
+
+# local LLM TAB
     with gr.Tab("Local LLM"):
         with gr.Row() as row:
             with gr.Column(scale=4) as col1:
