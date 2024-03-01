@@ -58,10 +58,10 @@ if False:
 #install_dataset("Matthijs/cmu-arctic-xvectors")
 
 
-text = "my mom is in bad shape because of her back pain. I am worried about her."
+
+text = "MusicGen is compatible with two generation modes: greedy and sampling. In practice, sampling leads to significantly better results than greedy, thus we encourage sampling mode to be used where possible. Sampling is enabled by default, and can be explicitly specified by setting do_sample=True in the call to MusicgenForConditionalGeneration.generate (see below)."
 tts = TextToSpeech()
-tts.load_model()
-speech = tts.generate_speech(text, 0)
+speech = tts.synthesise(text)
 tts.save_speech(speech, "./generated_speech", "speech.wav")
 
 

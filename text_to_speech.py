@@ -1,4 +1,4 @@
-from transformers import SpeechT5Processor, SpeechT5ForTextToSpeech, SpeechT5HifiGan
+from transformers import SpeechT5Processor, SpeechT5ForTextToSpeech, SpeechT5HifiGan, pipeline
 from datasets import load_dataset
 import torch
 import torch.nn as nn
@@ -24,6 +24,19 @@ class TextToSpeech:
             self.model = None
             self.vocoder = None
             self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+
+    def synthesise(self, text):
+        with self.console.status("[bold green]Creating pipeline...", spinner="dots") as status:
+            synthesiser = pipeline("text-to-speech", self.model_path, device=self.device)
+            
+            status.update("[bold green]Loading speaker embeddings...")
+            embeddings_dataset = load_dataset(self.vocoder_path, split="validation", trust_remote_code=True)
+
+            speaker_embedding = torch.tensor(embeddings_dataset[7306]["xvector"]).unsqueeze(0)
+            # You can replace this embedding with your own as well.
+            status.update("[bold green]Synthesising speech...")
+            speech = synthesiser(text, forward_params={"speaker_embeddings": speaker_embedding})
+            return speech
             
 
     def load_model(self):
@@ -53,9 +66,10 @@ class TextToSpeech:
     def save_speech(self, speech, file_path, file_name):
         with self.console.status("[bold green]Saving speech...", spinner="dots") as status:
             if not os.path.exists(file_path):
+                status.update(f"[bold green]Creating directory {file_path}...")
                 os.makedirs(file_path)
             path = os.path.join(file_path, file_name)
-            sf.write(path, speech.numpy(), samplerate=16000)
+            sf.write(path, speech["audio"], samplerate=speech["sampling_rate"])
 
     def build_model_path(self, model_name):
         return os.path.join(MODELS_PATH, model_name)
