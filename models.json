@@ -1,16 +1,1 @@
-{
-    "available_models": [
-        "cognitivecomputations/dolphin-2.6-mistral-7b",
-        "stabilityai/stable-diffusion-2-1",
-        "codellama/CodeLlama-7b-hf",
-        "google/gemma-7b",
-        "cognitivecomputations/dolphin-2_6-phi-2"
-    ],
-    "installed_models": [
-        "cognitivecomputations/dolphin-2.6-mistral-7b",
-        "stabilityai/stable-diffusion-2-1"
-    ]
-}
-
-
-
+{"installed_models": ["cognitivecomputations/dolphin-2.6-mistral-7b", "stabilityai/stable-diffusion-2-1", "openai/whisper-large-v3", "facebook/musicgen-large", "microsoft/speecht5_tts", "microsoft/speecht5_hifigan"], "available_models": ["cognitivecomputations/dolphin-2.6-mistral-7b", "stabilityai/stable-diffusion-2-1", "codellama/CodeLlama-7b-hf", "google/gemma-7b", "cognitivecomputations/dolphin-2_6-phi-2", "openai/whisper-base", "openai/whisper-tiny", "openai/whisper-small", "openai/whisper-medium", "openai/whisper-large-v3"]}

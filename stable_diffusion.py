@@ -2,10 +2,6 @@ import torch
 from diffusers import StableDiffusionPipeline, DPMSolverMultistepScheduler
 from utils import install_model
 
-
-
-# Use the DPMSolverMultistepScheduler (DPM-Solver++) scheduler here instead
-
 class SD_Pipeline:
     def __init__(self):
         self.model_id = "models/stabilityai/stable-diffusion-2-1"

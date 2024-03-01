@@ -14,6 +14,10 @@ diffusers
 scipy 
 safetensors
 
+# speech recognition
+optimum
+datasets[audio]
+
 # mistral api dependencies
 mistralai
 

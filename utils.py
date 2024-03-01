@@ -9,7 +9,7 @@ import subprocess
 from dotenv import load_dotenv
 load_dotenv()
 
-MODEL_BASE_PATH = "./models"
+MODELS_PATH = os.getenv("MODELS_PATH")
 
 # huggingface hub login with hu
 def hf_hub_login(token):
@@ -19,11 +19,11 @@ def hf_hub_login(token):
     except Exception as e:
         print(f"Unable to login to huggingface hub\n\n{e}")
 
-def build_model_path(model_name, model_path=MODEL_BASE_PATH):
+def build_model_path(model_name, model_path=MODELS_PATH):
     return os.path.join(model_path, model_name)
 
 # install model from huggingface hub in local directory
-def install_model(model_name, model_path=MODEL_BASE_PATH):
+def install_model(model_name, model_path=MODELS_PATH):
     # login to huggingface hub
     hf_hub_login(os.getenv("HUGGINGFACE_TOKEN"))
 
@@ -38,14 +38,19 @@ def install_model(model_name, model_path=MODEL_BASE_PATH):
         update_model_info(action="add", category="installed", model_name=model_name)
         print(f"Model {model_name} installed in {model_path}")
     except Exception as e:
-        print(f"Unable to install model {model_name} in {model_path}\n\n{e}")        
+        print(f"Unable to install model {model_name} in {model_path}\n\n{e}")
 
+# install dataset from huggingface hub in local directory
+def install_dataset(dataset_name, dataset_path=MODELS_PATH):
+    print(f"Installing dataset {dataset_name} in {dataset_path}")
+    new_repo = os.path.join(dataset_path, dataset_name)
+    subprocess.run(["git", "clone", f"https://huggingface.co/datasets/{dataset_name}", new_repo])
 # check if model is installed
-def is_model_installed(model_name, model_path=MODEL_BASE_PATH):
+def is_model_installed(model_name, model_path=MODELS_PATH):
     return os.path.exists(os.path.join(model_path, model_name))
     
 # create model directory
-def create_model_dir(model_name, model_path=MODEL_BASE_PATH):
+def create_model_dir(model_name, model_path=MODELS_PATH):
     model_path = os.path.join(model_path, model_name)
     if not os.path.exists(model_path):
         os.makedirs(model_path)
@@ -94,7 +99,7 @@ def get_available_models(file_path="models.json"):
         models = json.load(f)
     return models["available_models"]
 
-def uninstall_model(model_name, model_path=MODEL_BASE_PATH):
+def uninstall_model(model_name, model_path=MODELS_PATH):
     local_dir = os.path.join(model_path, model_name)
     try:
         os.rmdir(local_dir)

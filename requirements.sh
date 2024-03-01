@@ -54,9 +54,11 @@ pip3 install flash-attn --no-build-isolation
 pip3 install -U xformers --index-url https://download.pytorch.org/whl/cu118
 
 # t5 (text to speech)
-pip install --upgrade sentencepiece datasets[audio]
+pip3 install --upgrade sentencepiece datasets[audio]
 
-
+# speech to text requirements
+pip3 install torchaudio
+pip3 install ffmpeg
 
 pip3 install -r requirements.txt
 
