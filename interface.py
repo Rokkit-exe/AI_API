@@ -2,13 +2,19 @@ import gradio as gr
 import time
 from api.mistral_api_requests import chat, stream_chat
 from api.openai_api_requests import chat_completion
-from utils import install_model, get_available_models
+from utils import install_model, get_installed_models, uninstall_model, MODELS_PATH
 from stable_diffusion import SD_Pipeline
-from classes.mistral import Mistral
+from llm import LLM
 
 user_image = "images/person-5.webp"
 mistral_image = "images/mistral-ai-icon-logo.webp"
 openai_image = "images/OpenAI_Logo.webp"
+
+def gr_install_model(model_name, model_path, progress=gr.Progress()):
+    progress(0.1, "Installing model...")
+    install_model(model_name, model_path)
+    progress(1, "Model installed successfully!")
+    return "Model installed successfully!"
 
 
 with gr.Blocks() as demo:
@@ -116,7 +122,7 @@ with gr.Blocks() as demo:
     with gr.Tab("Local LLM"):
         with gr.Row() as row:
             with gr.Column(scale=4) as col1:
-                llm = Mistral()
+                llm = LLM("google/gemma-2b-it")
                 load_model_button = gr.Button(value="Load Model", size="sm")
                 load_model_button.click(llm.load_model, show_progress="minimal")
         gr.Progress(llm.model_loaded)
@@ -133,7 +139,7 @@ with gr.Blocks() as demo:
         clear = gr.ClearButton([msg, chatbot], size="sm") 
 
         def respond(message, chat_history):
-            bot_message = chat(message)
+            bot_message = llm.generate(message)
             chat_history.append((message, bot_message))
             return "", chat_history
         
@@ -142,53 +148,38 @@ with gr.Blocks() as demo:
     with gr.Tab("Install models"):
         with gr.Row() as row:
             with gr.Column(scale=4) as col1:
-                models = get_available_models()
-                model_types = list(models.keys())
-                def update_model_dropdown(model_type):
-                    print(model_type)
-                    model_dropdown.choices = [model["name"] for model in models[model_type]]
-
-                def update_label(model):
-                    model_info.value = model
-                
-                model_types_dropdown = gr.Dropdown(
-                    label="Model Type",
-                    value=model_types[0],
-                    choices=model_types,
-                    show_label=True,
-                    interactive=True,
-                )
-                model_dropdown = gr.Dropdown(
-                    label="Model",
-                    value="",
-                    choices=[],
-                    show_label=True,
-                    interactive=True,
-                )
-                model_types_dropdown.change(fn=update_model_dropdown, inputs=model_dropdown)
-                model_info = gr.Label(
-                    label="Model Info",
-                    value="",
-                    show_label=True,
-                )
-                model_dropdown.change(fn=update_label, inputs=model_info)
-                
-            with gr.Column(scale=1) as col2:
                 model_name_textbox = gr.Textbox(
                     label="Model Name",
-                    value="gpt2",
+                    value="google/gemma-2b-it",
+                    placeholder="Model Name",
                     show_label=True,
                     interactive=True,
                 )
                 model_path_textbox = gr.Textbox(
                     label="Model Path",
-                    value="./models",
+                    value=MODELS_PATH,
                     show_label=True,
                     interactive=True,
                 )
+                text_box = gr.Textbox(
+                    label="Progress",
+                    value="",
+                    interactive=False,
+                )
                 install_button = gr.Button(value="Install", size="sm")
-                install_button.click(install_model, [model_name_textbox, model_path_textbox], show_progress="minimal")
-
+                install_button.click(gr_install_model, [model_name_textbox, model_path_textbox], text_box )
+            with gr.Column(scale=4) as col2:
+                models = get_installed_models()
+                
+                model_dropdown = gr.Dropdown(
+                    label="Installed models",
+                    value=models[0],
+                    choices=models,
+                    show_label=True,
+                    interactive=True,
+                )
+                delete_button = gr.Button(value="Delete", size="sm")
+                delete_button.click(uninstall_model, [model_dropdown], show_progress="minimal")
 
 demo.launch()
 

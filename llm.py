@@ -6,7 +6,7 @@ from rich.console import Console
 from rich import print
 
 class LLM:
-    def __init__(self, model_name="cognitivecomputations/dolphin-2.6-mistral-7b"):
+    def __init__(self, model_name="google/gemma-2b-it"):
         print(f"[bold green]Initialysing model: {model_name}")
         self.model_name = model_name
         self.model_path = self.build_model_path(model_name)
@@ -17,6 +17,7 @@ class LLM:
         self.model_loaded = False
         self.chat_history = [{"role": "system", "content": "You are a usefull assistant!"}]
         self.console = Console()
+        self.past = None
         #self.model_info = get_model_info(self.model_path)
         if not torch.cuda.is_available():
             # raise error
@@ -38,10 +39,11 @@ class LLM:
                 max_new_tokens=3000, 
                 do_sample=True, 
                 pad_token_id=self.tokenizer.eos_token_id, 
-                eos_token_id=self.tokenizer.eos_token_id
+                eos_token_id=self.tokenizer.eos_token_id,
+                past=self.past
             )
             status.update("[bold green]Decoding response...")
-            response = self.tokenizer.batch_decode(generated_ids)[0]
+            response = self.tokenizer.batch_decode(generated_ids, skip_special_tokens=True)[0]
             
             self.chat_history.append({"role": "assistant", "content": response})
             return response

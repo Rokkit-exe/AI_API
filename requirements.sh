@@ -9,6 +9,7 @@ sudo apt install python3-venv -y
 sudo apt install wget -y
 sudo apt install dpkg -y
 sudo apt install git -y
+sudo apt install ffmpeg -y
 
 # update pip
 echo "Updating pip ...."

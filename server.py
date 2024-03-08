@@ -1,8 +1,8 @@
 from flask import Flask, request, jsonify
 from utils import install_model, MODEL_BASE_PATH
-from pipelines.sentiment import Sentiment
-from pipelines.summarizer import Summarizer
-from pipelines.fill_mask import Fill_Mask
+from sentiment import Sentiment
+from summarizer import Summarizer
+from fill_mask import Fill_Mask
 from llm import LLM
 
 port = 5000
@@ -100,8 +100,9 @@ def handle_text_generation_llama_post():
 
 
 if __name__ == '__main__':
-    mistral_model = Mistral(model_name="cognitivecomputations/dolphin-2.6-mistral-7b")
-    llama_model = Llama(model_name="codellama/CodeLlama-7b-hf")
-    llama_model.load_model()
+    #mistral_model = Mistral(model_name="cognitivecomputations/dolphin-2.6-mistral-7b")
+    #llama_model = Llama(model_name="codellama/CodeLlama-7b-hf")
+    llama_client = LLM()
+    llama_client.load_model()
     #mistral_model.load_model()
     app.run(debug=True, port=5000)

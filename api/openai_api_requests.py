@@ -9,8 +9,6 @@ import json
 client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
 client = OpenAI()
 
-print(client.api_key)
-
 if False:
     assistant = client.beta.assistants.create(
         name="Math Tutor",

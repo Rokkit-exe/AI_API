@@ -4,6 +4,7 @@ from huggingface_hub import hf_hub_download, HfApi, snapshot_download, hf_api
 import torch
 import json
 import subprocess
+import shutil
 
 # load environment variables
 from dotenv import load_dotenv
@@ -89,43 +90,20 @@ def get_model_info(model_name="distilbert-base-uncased"):
     }
     return json.dumps(model_info, indent=4)
 
-def get_installed_models(file_path="models.json"):
-    with open(file_path, "r") as f:
-        models = json.load(f)
-    return models["installed_models"]
-
-def get_available_models(file_path="models.json"):
-    with open(file_path, "r") as f:
-        models = json.load(f)
-    return models["available_models"]
-
 def uninstall_model(model_name, model_path=MODELS_PATH):
     local_dir = os.path.join(model_path, model_name)
     try:
-        os.rmdir(local_dir)
+        shutil.rmtree(local_dir)
         print(f"Model {model_name} uninstalled")
-        update_model_info(action="remove", category="installed", model_name=model_name)
     except Exception as e:
         print(f"Unable to uninstall model {model_name}\n\n{e}")
 
-def update_model_info(action=["add", "remove"], category=["installed", "available"], model_name=""):
-    installed_models = get_installed_models()
-    available_models = get_available_models()
-    if action == "add":
-        if category == "installed":
-            installed_models.append(model_name)
-        elif category == "available":
-            available_models.append(model_name)
-    elif action == "remove":
-        if category == "installed":
-            installed_models.remove(model_name)
-        elif category == "available":
-            available_models.remove(model_name)
 
-    models = {
-        "installed_models": installed_models,
-        "available_models": available_models
-    }
-    with open("models.json", "w") as f:
-        json.dump(models, f)
-        print("models.json updated")
+def get_installed_models(models_path=MODELS_PATH):
+    installed_models = []
+    authors = os.listdir(models_path)
+    for author in authors:
+        models = os.listdir(os.path.join(models_path, author))
+        for model in models:
+            installed_models.append(os.path.join(author, model))
+    return installed_models

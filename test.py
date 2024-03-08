@@ -1,8 +1,9 @@
-from utils import install_model, install_dataset
+from utils import install_model, install_dataset, get_installed_models
 from llm import LLM
 from speech_to_text import SpeechToText
 from musicgen import Musicgen
 from text_to_speech import TextToSpeech
+from summarizer import Summarizer, test
 
 if False:
     max_seq_length = 2048
@@ -44,7 +45,8 @@ if False:
 
 # llm
 if False:
-    llm = LLM()
+    #install_model("google/gemma-2b-it")
+    llm = LLM(model_name="google/gemma-2b-it")
     llm.load_model()
     llm.chat()
 
@@ -56,12 +58,18 @@ if False:
     musicgen.save_audio("./generated_audio", "audio.wav")
 
 #install_dataset("Matthijs/cmu-arctic-xvectors")
+if False:
+    text = "MusicGen is compatible with two generation modes: greedy and sampling. In practice, sampling leads to significantly better results than greedy, thus we encourage sampling mode to be used where possible. Sampling is enabled by default, and can be explicitly specified by setting do_sample=True in the call to MusicgenForConditionalGeneration.generate (see below)."
+    tts = TextToSpeech()
+    speech = tts.synthesise(text)
+    tts.save_speech(speech, "./generated_speech", "speech.wav")
 
+if False:
+    sum = Summarizer()
+    sum.load_model()
+    text = sum.summarize(test["text"])
+    print(text)
+    print(len(test["text"]))
 
-
-text = "MusicGen is compatible with two generation modes: greedy and sampling. In practice, sampling leads to significantly better results than greedy, thus we encourage sampling mode to be used where possible. Sampling is enabled by default, and can be explicitly specified by setting do_sample=True in the call to MusicgenForConditionalGeneration.generate (see below)."
-tts = TextToSpeech()
-speech = tts.synthesise(text)
-tts.save_speech(speech, "./generated_speech", "speech.wav")
 
 
