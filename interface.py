@@ -10,11 +10,25 @@ user_image = "images/person-5.webp"
 mistral_image = "images/mistral-ai-icon-logo.webp"
 openai_image = "images/OpenAI_Logo.webp"
 
+stable_diffusion = SD_Pipeline()
+
 def gr_install_model(model_name, model_path, progress=gr.Progress()):
     progress(0.1, "Installing model...")
     install_model(model_name, model_path)
     progress(1, "Model installed successfully!")
     return "Model installed successfully!"
+
+def load_stablediffusion(model_dropdown, progress=gr.Progress()):
+    progress(0.1, "loading model...")
+    stable_diffusion.load_model(model_dropdown)
+    progress(1, "Model loaded successfully!")
+    return "Model loaded successfully!"
+
+def unload_stablediffusion(progress=gr.Progress()):
+    progress(0.1, "Unloading_model model...")
+    stable_diffusion.unload_model()
+    progress(1, "Model unloaded successfully!")
+    return "Model unloaded successfully!"
 
 
 with gr.Blocks() as demo:
@@ -107,8 +121,26 @@ with gr.Blocks() as demo:
         with gr.Row() as row:
             with gr.Column(scale=1) as col1:
                 pipeline = SD_Pipeline()
-                load_model_button = gr.Button(value="Load Model", size="sm")
-                load_model_button.click(pipeline.load_model, show_progress="minimal")
+                models = get_installed_models(creator="stabilityai")
+                model_dropdown = gr.Dropdown(
+                    label="Installed models",
+                    value=models[0],
+                    choices=models,
+                    show_label=True,
+                    interactive=True,
+                )
+                with gr.Row() as subrow:
+                    with gr.Column(scale=4) as subcol1:
+                        load_model_button = gr.Button(value="Load Model", size="sm")
+                    with gr.Column(scale=4) as subcol2:
+                        unload_model_button = gr.Button(value="Unload Model", size="sm")
+                progress_text_box = gr.Textbox(
+                    label="Progress",
+                    value="",
+                    interactive=False,
+                )
+                load_model_button.click(load_stablediffusion, inputs=model_dropdown, outputs=progress_text_box, show_progress="minimal")
+                unload_model_button.click(unload_stablediffusion, outputs=progress_text_box, show_progress="minimal")
                 text_to_image_interface = gr.Interface(
                     fn=pipeline.generate_image,
                     inputs=gr.Textbox(placeholder="Type your prompt here...", label="Prompt", show_label=True),

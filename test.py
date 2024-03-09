@@ -71,5 +71,7 @@ if False:
     print(text)
     print(len(test["text"]))
 
+print(get_installed_models(creator="google"))
+
 
 

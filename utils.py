@@ -99,11 +99,19 @@ def uninstall_model(model_name, model_path=MODELS_PATH):
         print(f"Unable to uninstall model {model_name}\n\n{e}")
 
 
-def get_installed_models(models_path=MODELS_PATH):
+def get_installed_models(models_path=MODELS_PATH, creator=None):
     installed_models = []
     authors = os.listdir(models_path)
     for author in authors:
-        models = os.listdir(os.path.join(models_path, author))
-        for model in models:
-            installed_models.append(os.path.join(author, model))
+        if creator == None or creator == "":
+            models = os.listdir(os.path.join(models_path, author))
+            for model in models:
+                installed_models.append(os.path.join(author, model))
+        else:
+            if creator != None and creator != "" and creator == author:
+                models = os.listdir(os.path.join(models_path, author))
+                for model in models:
+                    installed_models.append(os.path.join(author, model))
+            else:
+                continue
     return installed_models
