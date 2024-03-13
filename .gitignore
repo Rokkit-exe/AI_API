@@ -31,6 +31,7 @@ generated_images/
 generated_audio/
 generated_speech/
 speech_sample/
+wsl_install.ps1
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
